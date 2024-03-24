@@ -1,5 +1,7 @@
+import 'package:attendance/page/authentication_page.dart/login_page.dart';
+import 'package:attendance/util/custom_snackbar.dart';
 import 'package:flutter/material.dart';
-
+import 'package:page_transition/page_transition.dart';
 
 class OTPScreen extends StatefulWidget {
   const OTPScreen({super.key});
@@ -12,87 +14,136 @@ class OTPScreenState extends State<OTPScreen> {
   List<TextEditingController> controllers = List.generate(5, (_) => TextEditingController());
   List<FocusNode> focusNodes = List.generate(5, (_) => FocusNode());
   final FocusNode firstFocusNode = FocusNode();
-  @override
-  void initState() {
-    
-    super.initState();
-    //  for (var i = 0; i < 4; i++) {
-    //   controllers[i].addListener(() {
-    //     print(i);
-    //     if (controllers[i].text.isEmpty && i > 0) {
-    //       FocusScope.of(context).requestFocus(focusNodes[i +1]);
-    //     }
-    //   });
-    // }
-  }
+ 
   @override
   void dispose() {
     for (var controller in controllers) {
       controller.dispose();
     }
-   
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('OTP Verification'),
-      ),
-      body: Center(
+      backgroundColor: const Color.fromARGB(255, 227, 227, 255),
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-                textDirection: TextDirection.ltr,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(
-                  5,
-                  (index) => SizedBox(
-                    width: 50.0,
-                    child: TextFormField(
-                      controller: controllers[index],
-                      focusNode: focusNodes[index],
-                      keyboardType: TextInputType.number,
-                      maxLength: 1,
-                      textAlign: TextAlign.center,
-                      
-                      onChanged: (value) {
-                        if (value.isNotEmpty && index < 4) {
-                          FocusScope.of(context).requestFocus(focusNodes[index + 1]);
-                        }
-                        else if(value.isEmpty && index > 0){
-                          FocusScope.of(context).requestFocus(focusNodes[index - 1]);
-                        }
-                        // You can perform validation or other actions here
-                      },
-                      decoration: const InputDecoration(
-                        counter: Offstage(),
-                        border:  OutlineInputBorder(
-            
-                           borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                       ),
-                       focusedBorder:   OutlineInputBorder(
+            const SizedBox(height: 40),
+                Center(
+                  child: Image.asset(
+                    "assets/image/otp_verification.png",
+                    fit: BoxFit.contain,
+                    width: MediaQuery.of(context).size.width-100,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+            ),
+            const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "ورود کد یک بار مصرف",
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                         
+                          ),
+                    ),
+                  ),
+                ),
+             Padding(
+              padding: const EdgeInsets.all(15),
+              child: Text(
+                "ما کدی به شماره ثبت شده شما در سامانه دانشگاه ارسال کردیم لطفا آن را وارد کنید",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey.shade600
+                ),
+              ),
+            ),
+            Form(
+              child: Row(
+                  textDirection: TextDirection.ltr,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(
+                    5,
+                    (index) => SizedBox(
+                      width: 50.0,
+                      child: TextFormField(
+                        controller: controllers[index],
+                        focusNode: focusNodes[index],
+                        keyboardType: TextInputType.number,
+                        maxLength: 1,
+                        textAlign: TextAlign.center,
                         
-                             borderSide: BorderSide(color: Color(0xFF1F54D3),width: 1.5)
+                        onChanged: (value) {
+                          if (value.isNotEmpty && index < 4) {
+                               focusNodes[index+1].requestFocus();
+                            //FocusScope.of(context).requestFocus(focusNodes[index + 1]);
+                          }
+                          else if(value.isEmpty && index > 0){
+                            focusNodes[index-1].requestFocus();
+                            //FocusScope.of(context).requestFocus(focusNodes[index - 1]);
+                          }
+                          // You can perform validation or other actions here
+                        },
+                        decoration: const InputDecoration(
+                          counter: Offstage(),
+                          border:  OutlineInputBorder(
+              
+                             borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                         ),
+                         focusedBorder:   OutlineInputBorder(
+                          
+                               borderSide: BorderSide(color: Color(0xFF1F54D3),width: 1.5)
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // String otp = '';
-                // for (var controller in controllers) {
-                //   otp += controller.text;
-                // }
-                //print('Entered OTP: $otp');
-              },
-              child: const Text('Verify OTP'),
             ),
+            const SizedBox(height: 50),
+            ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        minimumSize:Size(MediaQuery.of(context).size.width - 60, 60),
+                        backgroundColor: const Color(0xFF1F54D3),
+                        elevation: 5,
+                        animationDuration: const Duration(milliseconds: 1000),
+                       
+                        shape: const RoundedRectangleBorder(
+                           borderRadius: BorderRadius.all(Radius.circular(10)))),
+                        onPressed: () {
+                           String otp = '';
+                           for (var controller in controllers) {
+                               otp += controller.text;
+                           }
+                           CustomSnackBar().showSuccessSnackBar(context, otp);
+                            Navigator.pushReplacement(
+                                context,
+                                PageTransition(
+                                   type: PageTransitionType.leftToRightJoined,
+                                   child:  const LoginPage(),
+                                   childCurrent: context.widget,
+                                   duration: const Duration( milliseconds: 200),
+                                   reverseDuration: const Duration(milliseconds: 200)
+                                  )
+                                );
+                   
+                    },
+                    child: const Text(
+                      "تایید",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    )),
+            
           ],
         ),
       ),
