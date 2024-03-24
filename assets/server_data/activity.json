@@ -1,0 +1,28 @@
+{
+    "results":[
+        {
+          "color":"#0014CB",  
+          "className":"اصول سیستم‌های مخابراتی",
+          "totalAbbsent":2,
+          "totalClass":10,
+          "cause":"حضوری شما امروز 12 آذر ثبت شد",
+          "is_present":true   
+        },
+        {
+          "color":"#00A32E",    
+          "className":"الکترونیک صنعتی",
+          "totalAbbsent":7,
+          "totalClass":11,
+          "cause":"حضوری شما در تاریخ 11 آذر به دلیل عدم حضور ثبت نشد",
+          "is_present":false 
+        },
+        {
+          "color":"#F62C00",   
+          "className":"اتوماسیون صنعتی",
+          "totalAbbsent":3,
+          "totalClass":12,
+          "cause":"حضوری شما در تاریخ 11 آذر ثبت شد",
+          "is_present":true
+        }
+    ]
+}

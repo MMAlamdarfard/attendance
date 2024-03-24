@@ -1,0 +1,48 @@
+{
+  "Name": "مهدی",
+  "LastName": "علمدار فرد",
+  "UniqCode": "xyz",
+  "StudentCode": 9921010051,
+  "Field": "مهندسی برق",
+  "Tendency": "کنترل",
+  "Classes":[
+    {
+        "day":0,
+        "class":[
+
+        ]
+    },
+    {
+        "day":1,
+        "class":[
+            
+        ]
+    },
+    {
+        "day":2,
+        "class":[
+            
+        ]
+    },
+    {
+        "day":3,
+        "class":[
+            
+        ]
+    },
+    {
+        "day":4,
+        "class":[
+            
+        ]
+    },
+    {
+        "day":5,
+        "class":[
+            
+        ]
+    }
+  ]
+
+
+}
