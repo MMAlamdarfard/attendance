@@ -1,8 +1,8 @@
 import 'package:attendance/controller/classintro_controller.dart';
-import 'package:attendance/model/activity_model.dart';
-import 'package:attendance/model/classdata_model.dart';
-import 'package:attendance/model/geolocation.dart';
-import 'package:attendance/model/news_model.dart';
+import 'package:attendance/model/another_model/activity_model.dart';
+import 'package:attendance/model/another_model/classdata_model.dart';
+import 'package:attendance/model/another_model/geolocation.dart';
+import 'package:attendance/model/another_model/news_model.dart';
 import 'package:attendance/util/custom_snackbar.dart';
 import 'package:attendance/util/utill.dart';
 import 'package:attendance/widget/circular_progressbarWidget/circular_progressbar.dart';

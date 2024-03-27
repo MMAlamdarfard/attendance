@@ -1,4 +1,4 @@
-import 'package:attendance/model/geolocation.dart';
+import 'package:attendance/model/another_model/geolocation.dart';
 import 'package:attendance/page/student_page/map_page.dart';
 import 'package:attendance/util/utill.dart';
 import 'package:attendance/widget/classTimeLineWidget/class_timeline.dart';

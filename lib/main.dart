@@ -1,10 +1,8 @@
 
 import 'dart:convert';
 
-import 'package:attendance/page/authentication_page.dart/signup_page.dart';
-//import 'package:attendance/page/login_page.dart';
+import 'package:attendance/page/authentication_page.dart/login_page.dart';
 import 'package:attendance/page/student_page/dashboard_page.dart';
-//import 'package:attendance/util/alghoritm.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -114,7 +112,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       
-      home:const SignUpPage(),
+      home:const LoginPage(),
     );
   }
 }

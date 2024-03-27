@@ -1,7 +1,7 @@
 
 import 'package:attendance/controller/classintro_controller.dart';
-import 'package:attendance/model/classdata_model.dart';
-import 'package:attendance/model/geolocation.dart';
+import 'package:attendance/model/another_model/classdata_model.dart';
+import 'package:attendance/model/another_model/geolocation.dart';
 import 'package:attendance/page/student_page/class_intro_page.dart';
 import 'package:attendance/widget/classTimeLineWidget/painters/class_timeline_painter.dart';
 

@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:attendance/model/classdata_model.dart';
-import 'package:attendance/model/geolocation.dart';
+import 'package:attendance/model/another_model/classdata_model.dart';
+import 'package:attendance/model/another_model/geolocation.dart';
 
 class ClassDataController{
    

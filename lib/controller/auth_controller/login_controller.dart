@@ -1,16 +1,14 @@
 
+import 'package:attendance/Dio/dio.dart';
 import 'package:dio/dio.dart';
 
 
 class LoginController{
    
-  Dio dio = Dio();
+  late Dio dio;
   LoginController(){
-    dio.options.baseUrl = "http://razdeveloper.ir/";
-    dio.options.connectTimeout = const Duration(seconds: 10);
-    dio.options.receiveTimeout = const Duration(seconds: 10);
-    dio.options.sendTimeout = const Duration(seconds: 10);
-    
+    AttendanceDio attendanceDio = AttendanceDio();
+    dio = attendanceDio.getDio();
   } 
   Future<LoginModel?> login(RequestModel resquestModel) async{
    

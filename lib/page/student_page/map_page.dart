@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:attendance/model/geolocation.dart';
+import 'package:attendance/model/another_model/geolocation.dart';
 import 'package:attendance/util/custom_snackbar.dart';
 import 'package:attendance/util/utill.dart';
 import 'package:attendance/widget/classTimeLineWidget/class_timeline.dart';
