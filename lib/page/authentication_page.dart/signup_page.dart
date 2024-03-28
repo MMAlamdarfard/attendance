@@ -1,9 +1,17 @@
+
+import 'package:attendance/controller/auth_controller/signup_controller.dart';
+import 'package:attendance/model/auth_model/signup_model/signup_request_model.dart';
+import 'package:attendance/model/auth_model/signup_model/signup_responce_model.dart';
 import 'package:attendance/page/authentication_page.dart/login_page.dart';
-import 'package:attendance/page/authentication_page.dart/otp_page.dart';
+
 import 'package:attendance/util/custom_snackbar.dart';
+import 'package:attendance/util/exceptions/main_exception.dart/main_exception.dart';
 import 'package:attendance/widget/text_input/text_input.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:dartz/dartz.dart' as dartz;
 import 'package:page_transition/page_transition.dart';
 
 
@@ -27,7 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String? errorTextUserName;
   String? errorTextPassword;
   String? errorTextRepeatPassword;
-
+  SignUpController signUpController =SignUpController();
   @override
   void initState() {
     super.initState();
@@ -158,11 +166,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10)))),
-                    onPressed: () {
-                      String userName = textEditingControllerUserName.text;
-                      String passwordName = textEditingControllerPassword.text;
+                    onPressed: () async {
+                      String userName = textEditingControllerUserName.text.trim();
+                      String passwordName = textEditingControllerPassword.text.trim();
                       String repeatPassword =
-                          textEditingControllerRepeatPassword.text;
+                          textEditingControllerRepeatPassword.text.trim();
                       String? errorUserName =
                           validateUserName(userName, showSnackBar: true);
                       if (errorUserName != null) {
@@ -171,15 +179,15 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                         return;
                       }
-                      String? errorPassword =
-                          validatePassword(userName, showSnackBar: true);
+                      String? errorPassword =validatePassword(userName, showSnackBar: true);
                       if (errorPassword != null) {
                         setState(() {
                           errorTextPassword = errorPassword;
                         });
                         return;
                       }
-                      String? errorRepeatPassword = validateRepeatPassword(
+                      if(passwordName.isNotEmpty){
+                         String? errorRepeatPassword = validateRepeatPassword(
                           passwordName, repeatPassword,
                           showSnackBar: true);
                       if (errorRepeatPassword != null) {
@@ -188,16 +196,24 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                         return;
                       }
-                       Navigator.push(
-                                context,
-                                PageTransition(
-                                   type: PageTransitionType.bottomToTopPop,
-                                   child:  const OTPScreen(),
-                                   childCurrent: context.widget,
-                                   duration: const Duration( milliseconds: 500),
-                                   reverseDuration: const Duration(milliseconds: 500)
-                                  )
-                       );
+                      }
+                     dartz.Either<SignUpResponceModel, MainException> data= await signUpController.signUp(
+                       SignupRequestModel(
+                         username: "5000000000",
+                         password: "123456789"
+                       )
+                     );
+                     data.fold((l) => print(l), (r) => print(r.message));
+                      //  Navigator.push(
+                      //           context,
+                      //           PageTransition(
+                      //              type: PageTransitionType.bottomToTopPop,
+                      //              child:  const OTPScreen(),
+                      //              childCurrent: context.widget,
+                      //              duration: const Duration( milliseconds: 500),
+                      //              reverseDuration: const Duration(milliseconds: 500)
+                      //     )
+                      //  );
                     },
                     child: const Text(
                       "ثبت نام",
