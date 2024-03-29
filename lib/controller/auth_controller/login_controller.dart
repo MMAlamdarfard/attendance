@@ -1,72 +1,52 @@
-
 import 'package:attendance/Dio/dio.dart';
+import 'package:attendance/model/auth_model/login_model/login_request_model.dart';
+import 'package:attendance/model/auth_model/login_model/login_responce_model.dart';
+import 'package:attendance/util/exceptions/main_exception.dart/main_exception.dart';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 
 class LoginController{
    
-  late Dio dio;
+
+  late AttendanceDio attendanceDio;
   LoginController(){
-    AttendanceDio attendanceDio = AttendanceDio();
-    dio = attendanceDio.getDio();
+    attendanceDio = AttendanceDio();
+    
   } 
-  Future<LoginModel?> login(RequestModel resquestModel) async{
-   
-   try{
-     Response<dynamic> response = await dio.post("login",);
-     
-     return LoginModel(status:response.statusCode??0,model:ResponceModel.fromJson(response.data) );
+  Future<Either<LoginResponceModel,MainException>> login(LoginRequestModel resquestModel) async{
+    try{
+    
+     Response<dynamic> response = await attendanceDio.getDio().post("login/",data:resquestModel.toJson());
+     if(response.statusCode == 200 || response.statusCode ==201){
+        LoginResponceModel loginResponceModel = LoginResponceModel.fromJson(response.data);
+        return Left(loginResponceModel);
+     }
+     else if(response.statusCode == 500 || response.statusCode == 501){
+      throw ServerException(message: "خطای سرور لطفا بعدا تلاش کنید", statusCode: response.statusCode??500);
+     }
+     else if(response.statusCode == 403){
+       throw VpnException(message: "اگر به vpn متصل هستید ان را قطع کنید", statusCode: response.statusCode??400); 
+     }
+     else{
+      throw UnknownException(message: "خطای نامشخص ${response.data}", statusCode: response.statusCode??0);
+     }
+   }
+   on UnknownException catch(e){
+    return Right(e);
+   }
+   on VpnException catch(e){
+    return Right(e);
+   }
+   on ServerException catch(e){
+    return Right(e);
+   }
+   on DioException catch(e){
+  
+    return Right(MainException(message: e.response?.data["message"],statusCode:e.response?.statusCode??0 ));
    }
    catch(e){
-     return null;
+     return Right(UnknownException(message: e.toString(),statusCode: 50)); 
    }
-   
-  
-  }
-
-   
-
-}
-
-class LoginModel{
-  final int status;
-  final ResponceModel model;
-  LoginModel({required this.status, required this.model});
-}
-class RequestModel {
-  String? username;
-  String? password;
-  String? uniqid;
-
-  RequestModel({this.username, this.password, this.uniqid});
-
-  RequestModel.fromJson(Map<String, dynamic> json) {
-    username = json['username'];
-    password = json['password'];
-    uniqid = json['uniqid'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['username'] = username;
-    data['password'] = password;
-    data['uniqid'] = uniqid;
-    return data;
-  }
-}
-class ResponceModel {
-  String? type;
-  String? data;
-  ResponceModel ({this.type, this.data});
-  ResponceModel .fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    data = json['data'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['type'] = type;
-    data['data'] = this.data;
-    return data;
   }
 }

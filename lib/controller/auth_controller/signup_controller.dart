@@ -19,15 +19,16 @@ class SignUpController{
   Future<Either<SignUpResponceModel,MainException>> signUp(SignupRequestModel resquestModel) async{
     try{
     
-     Response<dynamic> response = await attendanceDio.getDio().post("signup/username",data:resquestModel.toJson());
+     Response<dynamic> response = await attendanceDio.getDio().post("signup/username/",data:resquestModel.toJson());
      if(response.statusCode == 200 || response.statusCode ==201){
-      return Left(SignUpResponceModel.fromJson(response.data));
+        SignUpResponceModel signUpResponceModel = SignUpResponceModel.fromJson(response.data);
+        return Left(signUpResponceModel);
      }
      else if(response.statusCode == 500 || response.statusCode == 501){
       throw ServerException(message: "خطای سرور لطفا بعدا تلاش کنید", statusCode: response.statusCode??500);
      }
      else if(response.statusCode == 403){
-       throw VpnException(message: "اگر به vpn متصل هستید ان را قطع کنید", statusCode: response.statusCode??500); 
+       throw VpnException(message: "اگر به vpn متصل هستید ان را قطع کنید", statusCode: response.statusCode??400); 
      }
      else{
       throw UnknownException(message: "خطای نامشخص ${response.data}", statusCode: response.statusCode??0);
@@ -43,7 +44,8 @@ class SignUpController{
     return Right(e);
    }
    on DioException catch(e){
-    return Right(MainException(message: e.response?.data,statusCode:e.response?.statusCode??0 ));
+  
+    return Right(MainException(message: e.response?.data["message"],statusCode:e.response?.statusCode??0 ));
    }
    catch(e){
      return Right(UnknownException(message: e.toString(),statusCode: 50)); 

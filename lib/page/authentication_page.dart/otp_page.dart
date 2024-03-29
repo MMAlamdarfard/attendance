@@ -1,10 +1,20 @@
+
+
+import 'package:attendance/controller/auth_controller/verificatition_code_controller.dart';
+import 'package:attendance/model/auth_model/verification_model/verification_request_model.dart';
 import 'package:attendance/page/authentication_page.dart/login_page.dart';
 import 'package:attendance/util/custom_snackbar.dart';
+import 'package:attendance/util/utill.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:page_transition/page_transition.dart';
 
+
 class OTPScreen extends StatefulWidget {
-  const OTPScreen({super.key});
+   
+  final String username; 
+  
+  const OTPScreen({super.key, required this.username});
 
   @override
   OTPScreenState createState() => OTPScreenState();
@@ -13,8 +23,9 @@ class OTPScreen extends StatefulWidget {
 class OTPScreenState extends State<OTPScreen> {
   List<TextEditingController> controllers = List.generate(5, (_) => TextEditingController());
   List<FocusNode> focusNodes = List.generate(5, (_) => FocusNode());
-  final FocusNode firstFocusNode = FocusNode();
- 
+  VerificationCodeController verificationCodeController =VerificationCodeController();
+  bool isLoading = false;
+  CustomSnackBar customSnackBar = CustomSnackBar();
   @override
   void dispose() {
     for (var controller in controllers) {
@@ -111,37 +122,96 @@ class OTPScreenState extends State<OTPScreen> {
             const SizedBox(height: 50),
             ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        minimumSize:Size(MediaQuery.of(context).size.width - 60, 60),
+                        maximumSize:Size(MediaQuery.of(context).size.width - 60, 60),
                         backgroundColor: const Color(0xFF1F54D3),
                         elevation: 5,
                         animationDuration: const Duration(milliseconds: 1000),
                        
                         shape: const RoundedRectangleBorder(
                            borderRadius: BorderRadius.all(Radius.circular(10)))),
-                        onPressed: () {
+                        onPressed: isLoading?null :() {
                            String otp = '';
                            for (var controller in controllers) {
                                otp += controller.text;
                            }
-                           CustomSnackBar().showSuccessSnackBar(context, otp);
-                            Navigator.pushReplacement(
-                                context,
-                                PageTransition(
-                                   type: PageTransitionType.leftToRightJoined,
-                                   child:  const LoginPage(),
-                                   childCurrent: context.widget,
-                                   duration: const Duration( milliseconds: 200),
-                                   reverseDuration: const Duration(milliseconds: 200)
-                                  )
-                                );
+                           if(otp.length!=5){
+                             customSnackBar.showErrorSnackBar(context, "لطفا کد را به صورت صحیح وارد کنید");
+                             return;
+                           }
+                           DeviceInformation().getUniqueId().then((value){
+                             if(value!=null){
+                                 setState(() {
+                                   isLoading = true ;
+                                 });
+                                 verificationCodeController.verifyCode(
+                                   VerificationCodeRequestModel(
+                                      username:int.parse(widget.username),
+                                      verifycode: otp,
+                                      uniqcode: value 
+                                   )
+                                ).then((responce){
+                                  setState(() {
+                                    isLoading =false;
+                                  });
+                                   responce.fold(
+                                    (res) {
+                                       
+                                       Navigator.pushReplacement(
+                                          context,
+                                          PageTransition(
+                                             type: PageTransitionType.bottomToTopJoined,
+                                             child:  const LoginPage(),
+                                             childCurrent: context.widget,
+                                             duration: const Duration( milliseconds: 200),
+                                             reverseDuration: const Duration(milliseconds: 200)
+                                           )
+                                        );
+                                        customSnackBar.showSuccessSnackBar(context, "هویت شما تایید شد لطفا وارد شوید");
+                                    },
+                                    (error) {
+                                      customSnackBar.showErrorSnackBar(context, error.message);
+                                      
+                                    });
+                                });
+                             }else{
+                              customSnackBar.showSuccessSnackBar(context, "خطای دسترسی به مشخصات گوشی");
+                             }
+                           });
+                          
+                          //  CustomSnackBar().showSuccessSnackBar(context, otp);
+                          //  Navigator.pushReplacement(
+                          //       context,
+                          //       PageTransition(
+                          //          type: PageTransitionType.leftToRightJoined,
+                          //          child:  const LoginPage(),
+                          //          childCurrent: context.widget,
+                          //          duration: const Duration( milliseconds: 200),
+                          //          reverseDuration: const Duration(milliseconds: 200)
+                          //         )
+                          //       );
                    
                     },
-                    child: const Text(
-                      "تایید",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                    child:  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      
+                        children: [
+                          if(isLoading) LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.white,
+                              size: 40,
+                          ),
+                          if(isLoading) const SizedBox(width: 5,),
+                           Text(
+                           isLoading? "لطفا صبر کنید":"تایید",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        ],
+                      ),
                     )),
             
           ],
@@ -149,4 +219,7 @@ class OTPScreenState extends State<OTPScreen> {
       ),
     );
   }
+  
+  
+
 }

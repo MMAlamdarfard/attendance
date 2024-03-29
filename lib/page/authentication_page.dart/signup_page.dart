@@ -1,18 +1,14 @@
 
 import 'package:attendance/controller/auth_controller/signup_controller.dart';
 import 'package:attendance/model/auth_model/signup_model/signup_request_model.dart';
-import 'package:attendance/model/auth_model/signup_model/signup_responce_model.dart';
 import 'package:attendance/page/authentication_page.dart/login_page.dart';
-
 import 'package:attendance/util/custom_snackbar.dart';
-import 'package:attendance/util/exceptions/main_exception.dart/main_exception.dart';
 import 'package:attendance/widget/text_input/text_input.dart';
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:dartz/dartz.dart' as dartz;
 import 'package:page_transition/page_transition.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'otp_page.dart';
 
 
 class SignUpPage extends StatefulWidget {
@@ -36,6 +32,8 @@ class _SignUpPageState extends State<SignUpPage> {
   String? errorTextPassword;
   String? errorTextRepeatPassword;
   SignUpController signUpController =SignUpController();
+  CustomSnackBar snackBar =CustomSnackBar();
+  bool isLoading=false;
   @override
   void initState() {
     super.initState();
@@ -156,9 +154,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   height: 50,
                 ),
                 ElevatedButton(
+                    
                     style: ElevatedButton.styleFrom(
-                        minimumSize:
-                            Size(MediaQuery.of(context).size.width - 60, 60),
+                       surfaceTintColor: Colors.white,
+                        maximumSize:
+                            Size(MediaQuery.of(context).size.width - 60, 120),
                         backgroundColor: const Color(0xFF1F54D3),
                         elevation: 5,
                         animationDuration: const Duration(milliseconds: 1000),
@@ -166,20 +166,19 @@ class _SignUpPageState extends State<SignUpPage> {
                         shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10)))),
-                    onPressed: () async {
+                    onPressed: isLoading? null:
+                     () async {
                       String userName = textEditingControllerUserName.text.trim();
                       String passwordName = textEditingControllerPassword.text.trim();
-                      String repeatPassword =
-                          textEditingControllerRepeatPassword.text.trim();
-                      String? errorUserName =
-                          validateUserName(userName, showSnackBar: true);
+                      String repeatPassword = textEditingControllerRepeatPassword.text.trim();
+                      String? errorUserName = validateUserName(userName, showSnackBar: true);
                       if (errorUserName != null) {
                         setState(() {
                           errorTextUserName = errorUserName;
                         });
                         return;
                       }
-                      String? errorPassword =validatePassword(userName, showSnackBar: true);
+                      String? errorPassword =validatePassword(passwordName, showSnackBar: true);
                       if (errorPassword != null) {
                         setState(() {
                           errorTextPassword = errorPassword;
@@ -197,30 +196,64 @@ class _SignUpPageState extends State<SignUpPage> {
                         return;
                       }
                       }
-                     dartz.Either<SignUpResponceModel, MainException> data= await signUpController.signUp(
+                    
+                      
+                      setState(() {
+                          isLoading = true;
+                      });
+                      signUpController.signUp(
                        SignupRequestModel(
-                         username: "5000000000",
-                         password: "123456789"
+                         username: userName,
+                         password: passwordName
                        )
-                     );
-                     data.fold((l) => print(l), (r) => print(r.message));
-                      //  Navigator.push(
-                      //           context,
-                      //           PageTransition(
-                      //              type: PageTransitionType.bottomToTopPop,
-                      //              child:  const OTPScreen(),
-                      //              childCurrent: context.widget,
-                      //              duration: const Duration( milliseconds: 500),
-                      //              reverseDuration: const Duration(milliseconds: 500)
-                      //     )
-                      //  );
+                     ).then((value){
+                       setState(() {
+                         isLoading = false;
+                       });
+                       
+                       value.fold(
+                       (responce) {
+                    
+                          Navigator.push(
+                                context,
+                                PageTransition(
+                                   type: PageTransitionType.bottomToTopPop,
+                                   child: OTPScreen(username:responce.username??""),
+                                   childCurrent: context.widget,
+                                   duration: const Duration( milliseconds: 200),
+                                   reverseDuration: const Duration(milliseconds: 200)
+                                  
+                            )
+                          );
+                          snackBar.showSuccessSnackBar(context, "شما با موفقیت ثبت نام شدید"); 
+                       },
+                       (error){
+                          snackBar.showErrorSnackBar(context, error.message);
+                       });
+                     });
+                    
+                      
                     },
-                    child: const Text(
-                      "ثبت نام",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                    child:  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if(isLoading) LoadingAnimationWidget.staggeredDotsWave(
+                            color: Colors.white,
+                            size: 40,
+                           ),
+                           if(isLoading) const SizedBox(width: 5,),
+                           Text(
+                             isLoading? "لطفا صبر کنید":"ثبت نام",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        ],
+                      ),
                     )),
                 const SizedBox(
                   height: 40,
