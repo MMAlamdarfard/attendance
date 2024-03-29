@@ -4,22 +4,30 @@ import 'package:attendance/model/auth_model/login_model/login_responce_model.dar
 import 'package:attendance/util/exceptions/main_exception.dart/main_exception.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class LoginController{
    
 
   late AttendanceDio attendanceDio;
+  late SharedPreferences prefs;
   LoginController(){
     attendanceDio = AttendanceDio();
+    init();
     
   } 
+  init() async{
+      prefs = await SharedPreferences.getInstance();
+  }
   Future<Either<LoginResponceModel,MainException>> login(LoginRequestModel resquestModel) async{
     try{
     
      Response<dynamic> response = await attendanceDio.getDio().post("login/",data:resquestModel.toJson());
      if(response.statusCode == 200 || response.statusCode ==201){
         LoginResponceModel loginResponceModel = LoginResponceModel.fromJson(response.data);
+        prefs.setString('accessToken',loginResponceModel.accessToken??"");
+        prefs.setString('refreshToken',loginResponceModel.refreshToken??"");
         return Left(loginResponceModel);
      }
      else if(response.statusCode == 500 || response.statusCode == 501){
@@ -27,6 +35,9 @@ class LoginController{
      }
      else if(response.statusCode == 403){
        throw VpnException(message: "اگر به vpn متصل هستید ان را قطع کنید", statusCode: response.statusCode??400); 
+     }
+     else if(response.statusCode == 401){
+      throw MainException(message: "هویت شما تایید نشده است", statusCode: 401);
      }
      else{
       throw UnknownException(message: "خطای نامشخص ${response.data}", statusCode: response.statusCode??0);

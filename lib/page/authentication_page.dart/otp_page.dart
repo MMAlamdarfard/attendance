@@ -6,6 +6,7 @@ import 'package:attendance/page/authentication_page.dart/login_page.dart';
 import 'package:attendance/util/custom_snackbar.dart';
 import 'package:attendance/util/utill.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -33,7 +34,14 @@ class OTPScreenState extends State<OTPScreen> {
     }
     super.dispose();
   }
-
+   @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown  
+    ]);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,13 +161,14 @@ class OTPScreenState extends State<OTPScreen> {
                                   setState(() {
                                     isLoading =false;
                                   });
+                                  
                                    responce.fold(
                                     (res) {
                                        
                                        Navigator.pushReplacement(
                                           context,
                                           PageTransition(
-                                             type: PageTransitionType.bottomToTopJoined,
+                                             type: PageTransitionType.fade,
                                              child:  const LoginPage(),
                                              childCurrent: context.widget,
                                              duration: const Duration( milliseconds: 200),
@@ -172,6 +181,7 @@ class OTPScreenState extends State<OTPScreen> {
                                       customSnackBar.showErrorSnackBar(context, error.message);
                                       
                                     });
+                                
                                 });
                              }else{
                               customSnackBar.showSuccessSnackBar(context, "خطای دسترسی به مشخصات گوشی");

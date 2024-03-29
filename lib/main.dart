@@ -81,9 +81,7 @@ void main() async{
      
   });
   SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  String? data=prefs.getString('loginModel');
- 
+  String? data=prefs.getString('accessToken');
   runApp(MyApp(isLogged:  !(data==null || data=="")));
 }
 
@@ -112,7 +110,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       
-      home:const LoginPage()
+      home: isLogged ? const MyHomePage(): const LoginPage()
     );
   }
 }

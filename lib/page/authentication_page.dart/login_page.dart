@@ -1,9 +1,14 @@
+import 'package:attendance/controller/auth_controller/login_controller.dart';
+import 'package:attendance/model/auth_model/login_model/login_request_model.dart';
+import 'package:attendance/page/authentication_page.dart/otp_page.dart';
 import 'package:attendance/page/authentication_page.dart/signup_page.dart';
 import 'package:attendance/page/student_page/dashboard_page.dart';
 import 'package:attendance/util/custom_snackbar.dart';
+import 'package:attendance/util/utill.dart';
 import 'package:attendance/widget/text_input/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:page_transition/page_transition.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController textEditingControllerUserName = TextEditingController();
   TextEditingController textEditingControllerPassword = TextEditingController();
   CustomSnackBar customSnackBar = CustomSnackBar();
+  LoginController loginController =LoginController();
   RegExp numberRegex = RegExp(r'^[0-9]+$');
   RegExp illegalRegex = RegExp(r'[<>&\"\\]');
   FocusNode passwordFocusNode = FocusNode();
@@ -24,10 +30,16 @@ class _LoginPageState extends State<LoginPage> {
   String? errorTextUserName;
   String? errorTextPassword;
   String? errorTextRepeatPassword;
+  bool isLoading = false ;
 
   @override
   void initState() {
     super.initState();
+     SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,  
+        DeviceOrientation.portraitDown,
+        
+    ]);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
@@ -142,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        minimumSize:
+                        maximumSize:
                             Size(MediaQuery.of(context).size.width - 60, 60),
                         backgroundColor: const Color(0xFF1F54D3),
                         elevation: 5,
@@ -151,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                         shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10)))),
-                    onPressed: () {
+                    onPressed:isLoading? null : () {
                       String userName = textEditingControllerUserName.text;
                       String passwordName = textEditingControllerPassword.text;
                     
@@ -172,25 +184,99 @@ class _LoginPageState extends State<LoginPage> {
                         return;
                       }
                      
-                       Navigator.push(
-                                context,
-                                PageTransition(
-                                   type: PageTransitionType.bottomToTopPop,
-                                   child:  const MyHomePage(),
-                                   childCurrent: context.widget,
-                                   duration: const Duration( milliseconds: 500),
-                                   reverseDuration: const Duration(milliseconds: 500)
-                                  )
-                       );
-                      customSnackBar.showSuccessSnackBar(context, "LOGGED IN");
+                      DeviceInformation().getUniqueId().then((value){
 
+                        if(value!=null){
+                           setState(() {
+                          isLoading = true;
+                      });
+                          loginController.login(
+                            LoginRequestModel(
+                               username: int.parse(userName),
+                               password: passwordName,
+                               uniqcode: value
+                            )
+                          ).then((responce){
+                                    setState(() {
+                                     isLoading = false;
+                                    });
+                                   responce.fold(
+                                    (res) {
+                                       Navigator.pushReplacement(
+                                          context,
+                                          PageTransition(
+                                             type: PageTransitionType.fade,
+                                             child:  const MyHomePage(),
+                                             childCurrent: context.widget,
+                                             duration: const Duration( milliseconds: 200),
+                                             reverseDuration: const Duration(milliseconds: 200)
+                                           )
+                                        );
+                                        customSnackBar.showSuccessSnackBar(context, "شما با موفقیت وارد شدید");
+                                    },
+                                    (error) {
+                                      
+                                      
+                                      if(error.statusCode==401){
+                                            Navigator.pushReplacement(
+                                               context,
+                                            PageTransition(
+                                              type: PageTransitionType.fade,
+                                              child: OTPScreen(username:userName),
+                                              childCurrent: context.widget,
+                                              duration: const Duration( milliseconds: 200),
+                                              reverseDuration: const Duration(milliseconds: 200)
+                                  
+                                            )
+                                          );
+                                      } 
+                                      customSnackBar.showErrorSnackBar(context, error.message); 
+                                    });
+                                        
+                          });
+                        }
+                        else{
+                          customSnackBar.showSuccessSnackBar(context, "خطای دسترسی به مشخصات گوشی");
+                        }
+                      });
+                      
+                     
+                      // Navigator.push(
+                      //           context,
+                      //           PageTransition(
+                      //              type: PageTransitionType.bottomToTopPop,
+                      //              child:  const MyHomePage(),
+                      //              childCurrent: context.widget,
+                      //              duration: const Duration( milliseconds: 500),
+                      //              reverseDuration: const Duration(milliseconds: 500)
+                      //             )
+                      //  );
+                      
+                      // customSnackBar.showSuccessSnackBar(context, "LOGGED IN");
+
+                  
                     },
-                    child: const Text(
-                      "ورود",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                    child:  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      
+                        children: [
+                          if(isLoading) LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.white,
+                              size: 40,
+                          ),
+                          if(isLoading) const SizedBox(width: 5,),
+                           Text(
+                           isLoading? "لطفا صبر کنید":"ورود",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        ],
+                      ),
                     )),
                 const SizedBox(
                   height: 40,
@@ -211,7 +297,7 @@ class _LoginPageState extends State<LoginPage> {
                                   context,
                                   PageTransition(
                                       type:
-                                          PageTransitionType.rightToLeftJoined,
+                                          PageTransitionType.leftToRightJoined,
                                       child: const SignUpPage(),
                                       childCurrent: context.widget,
                                       duration:

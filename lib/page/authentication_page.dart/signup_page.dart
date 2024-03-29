@@ -37,11 +37,15 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown  
+    ]);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.transparent));
-  }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -214,10 +218,10 @@ class _SignUpPageState extends State<SignUpPage> {
                        value.fold(
                        (responce) {
                     
-                          Navigator.push(
+                          Navigator.pushReplacement(
                                 context,
                                 PageTransition(
-                                   type: PageTransitionType.bottomToTopPop,
+                                   type: PageTransitionType.fade,
                                    child: OTPScreen(username:responce.username??""),
                                    childCurrent: context.widget,
                                    duration: const Duration( milliseconds: 200),
@@ -273,7 +277,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                Navigator.pushReplacement(
                                 context,
                                 PageTransition(
-                                   type: PageTransitionType.leftToRightJoined,
+                                   type: PageTransitionType.rightToLeftJoined,
                                    child:  const LoginPage(),
                                    childCurrent: context.widget,
                                    duration: const Duration( milliseconds: 500),
