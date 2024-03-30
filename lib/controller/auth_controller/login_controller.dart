@@ -53,10 +53,21 @@ class LoginController{
     return Right(e);
    }
    on DioException catch(e){
-  
-    return Right(MainException(message: e.response?.data["message"],statusCode:e.response?.statusCode??0 ));
+    Response<dynamic>? res =e.response;
+    if(res!=null){
+       return Right(MainException(message: res.data["message"],statusCode:res.statusCode??0 ));
+    }
+    else{
+      if(e.type ==DioExceptionType.unknown){
+         return Right(ServerException(message:e.message??"خطای غیره منتظره ای رخ داده است لطفا بعدا تلاش کنید" ,statusCode: 100));
+      }else{
+        return Right(ServerException(message: "خطای غیره منتظره ای رخ داده است لطفا بعدا تلاش کنید", statusCode: 500));
+      }
+      
+    }
    }
    catch(e){
+    
      return Right(UnknownException(message: e.toString(),statusCode: 50)); 
    }
   }

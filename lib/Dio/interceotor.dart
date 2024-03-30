@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:attendance/util/alghoritm.dart';
-import 'package:attendance/util/exceptions/main_exception.dart/main_exception.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 class AttendanceInterceptor extends Interceptor{
   late Algorithm algorithm;
@@ -10,18 +10,48 @@ class AttendanceInterceptor extends Interceptor{
   }
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.data = {
-      "data": algorithm.encryptWithRAZalghorithm(jsonEncode(options.data))  
-    };
-    super.onRequest(options, handler);
-  }
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
+   
+   isConnected()
+   .then((value){
+   
+     if(value == 2){
+      options.data = {
+       "data": algorithm.encryptWithRAZalghorithm(jsonEncode(options.data))  
+      };
+      super.onRequest(options, handler);
+     }else if(value == 1){
+      handler.reject(
+        DioException(
+          requestOptions:RequestOptions(),
+          type: DioExceptionType.unknown,
+          message: "خطای VPN"
+        )
+      );
+     }else{
+       handler.reject(
+        DioException(
+          requestOptions:RequestOptions(),
+          type: DioExceptionType.unknown,
+          message: "لطفا اتصال خود را به اینترنت  چک کنید"
+        )
+      );
+     }
+   });
     
-    if(err.type == DioExceptionType.sendTimeout || err.type ==DioExceptionType.receiveTimeout || err.type == DioExceptionType.connectionTimeout){
-      throw UnknownException(message: "خطای غیر منتظره رخ داده است",statusCode: 100);
-    }
-    
-    super.onError(err, handler);
   }
+ Future<int> isConnected() async {
+  final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
+
+  if (connectivityResult.contains(ConnectivityResult.mobile) || 
+     connectivityResult.contains(ConnectivityResult.wifi)    ||
+     connectivityResult.contains(ConnectivityResult.ethernet)
+  ) {
+    return 2; 
+  } else if (connectivityResult.contains(ConnectivityResult.vpn)) {
+    return 1;
+  } else  {
+    return 0;
+  } 
+
+}
 }
