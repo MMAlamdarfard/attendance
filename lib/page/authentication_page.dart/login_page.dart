@@ -2,7 +2,7 @@ import 'package:attendance/controller/auth_controller/login_controller.dart';
 import 'package:attendance/model/auth_model/login_model/login_request_model.dart';
 import 'package:attendance/page/authentication_page.dart/otp_page.dart';
 import 'package:attendance/page/authentication_page.dart/signup_page.dart';
-import 'package:attendance/page/student_page/dashboard_page.dart';
+import 'package:attendance/page/student_page/main_page.dart';
 import 'package:attendance/util/custom_snackbar.dart';
 import 'package:attendance/util/utill.dart';
 import 'package:attendance/widget/text_input/text_input.dart';
@@ -206,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                                           context,
                                           PageTransition(
                                              type: PageTransitionType.fade,
-                                             child:  const MyHomePage(),
+                                             child:  const MainPage(),
                                              childCurrent: context.widget,
                                              duration: const Duration( milliseconds: 200),
                                              reverseDuration: const Duration(milliseconds: 200)

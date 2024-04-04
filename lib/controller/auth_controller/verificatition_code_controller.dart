@@ -13,7 +13,7 @@ class VerificationCodeController{
 
   late AttendanceDio attendanceDio;
   VerificationCodeController(){
-    attendanceDio = AttendanceDio();
+    attendanceDio = AttendanceDio(timeOut:5);
     
   } 
   Future<Either<String,MainException>> verifyCode(VerificationCodeRequestModel resquestModel) async{
@@ -47,7 +47,11 @@ class VerificationCodeController{
   
     Response<dynamic>? res =e.response;
     if(res!=null){
-       return Right(MainException(message: res.data["message"],statusCode:res.statusCode??0 ));
+        try{
+        return Right(MainException(message: res.data["message"],statusCode:res.statusCode??0 )); 
+      }catch(e){
+        return Right(MainException(message: "خطای سرور لطفا شکیبا باشید",statusCode:res.statusCode??0 ));
+      }
     }
     else{
        if(e.type ==DioExceptionType.unknown){

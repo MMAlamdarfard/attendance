@@ -1,8 +1,5 @@
-
-import 'dart:convert';
-
 import 'package:attendance/page/authentication_page.dart/login_page.dart';
-import 'package:attendance/page/student_page/dashboard_page.dart';
+import 'package:attendance/page/student_page/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,17 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 final GlobalKey<NavigatorState> navigatorKey =GlobalKey<NavigatorState>();
 
 void main() async{
-  //Map<String,String> data76 = {
-  //'username':'5000000000',
-  //'password':'d456789',
-  //};
-
- // final algorithm = Algorithm();
-
-  // String encr = algorithm.encryptWithRAZalghorithm( jsonEncode(data76));
-  // print(encr);
-  // print(algorithm.decryptWithRAZalghorithm(encr));
-  
   WidgetsFlutterBinding.ensureInitialized();  
   await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
@@ -35,7 +21,7 @@ void main() async{
       Navigator.push(
         navigatorKey.currentState!.context,
         MaterialPageRoute(
-          builder: (context) =>  MyHomePage(map:jsonEncode(message.data) ),
+          builder: (context) =>  const MainPage(),
         ),
       );
     }
@@ -58,7 +44,7 @@ void main() async{
       Navigator.push(
         navigatorKey.currentState!.context,
         MaterialPageRoute(
-          builder: (context) =>  MyHomePage(map:jsonEncode(message.data) ),
+          builder: (context) =>  const MainPage(),
         ),
       );
     }
@@ -110,7 +96,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       
-      home: isLogged ? const MyHomePage(): const LoginPage()
+      home: isLogged ? const MainPage(): const LoginPage()
     );
   }
 }

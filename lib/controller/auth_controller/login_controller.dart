@@ -13,7 +13,7 @@ class LoginController{
   late AttendanceDio attendanceDio;
   late SharedPreferences prefs;
   LoginController(){
-    attendanceDio = AttendanceDio();
+    attendanceDio = AttendanceDio(timeOut:5);
     init();
     
   } 
@@ -23,7 +23,7 @@ class LoginController{
   Future<Either<LoginResponceModel,MainException>> login(LoginRequestModel resquestModel) async{
     try{
     
-     Response<dynamic> response = await attendanceDio.getDio().post("login/",data:resquestModel.toJson());
+     Response<dynamic> response = await attendanceDio.getDio().post("login",data:resquestModel.toJson());
      if(response.statusCode == 200 || response.statusCode ==201){
         LoginResponceModel loginResponceModel = LoginResponceModel.fromJson(response.data);
         prefs.setString('accessToken',loginResponceModel.accessToken??"");
@@ -55,11 +55,16 @@ class LoginController{
    on DioException catch(e){
     Response<dynamic>? res =e.response;
     if(res!=null){
-       return Right(MainException(message: res.data["message"],statusCode:res.statusCode??0 ));
+      try{
+        return Right(MainException(message: res.data["message"],statusCode:res.statusCode??0 )); 
+      }catch(e){
+        return Right(MainException(message: "خطای سرور لطفا شکیبا باشید",statusCode:res.statusCode??0 ));
+      }
     }
     else{
+      
       if(e.type ==DioExceptionType.unknown){
-         return Right(ServerException(message:e.message??"خطای غیره منتظره ای رخ داده است لطفا بعدا تلاش کنید" ,statusCode: 100));
+         return Right(ServerException(message:e.message??".خطای سرور لطفا شکیبا باشید" ,statusCode: 100));
       }else{
         return Right(ServerException(message: "خطای غیره منتظره ای رخ داده است لطفا بعدا تلاش کنید", statusCode: 500));
       }

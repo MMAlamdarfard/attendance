@@ -1,29 +1,37 @@
+import 'dart:async';
+
 import 'package:attendance/controller/classintro_controller.dart';
 import 'package:attendance/model/another_model/activity_model.dart';
 import 'package:attendance/model/another_model/classdata_model.dart';
 import 'package:attendance/model/another_model/geolocation.dart';
 import 'package:attendance/model/another_model/news_model.dart';
+import 'package:attendance/page/student_page/message_page.dart';
 import 'package:attendance/util/custom_snackbar.dart';
 import 'package:attendance/util/utill.dart';
 import 'package:attendance/widget/circular_progressbarWidget/circular_progressbar.dart';
 import 'package:attendance/widget/classTimeLineWidget/class_timeline.dart';
 import 'package:attendance/widget/classTimeLineWidget/class_timeline_loading.dart';
+
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
+
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MyHomePage extends StatefulWidget {
+class StudentDashboardPage extends StatefulWidget {
   final String? map;
-  const MyHomePage({super.key,this.map});
+  
+  
+  const StudentDashboardPage({super.key,this.map});
  
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<StudentDashboardPage> createState() => _StudentDashboardState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin  {
+class _StudentDashboardState extends State<StudentDashboardPage> with SingleTickerProviderStateMixin  {
   
   
   Activity? activity;
@@ -32,7 +40,9 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   late AnimationController _controller;
   ClassDataController classDataController = ClassDataController();
   MainClassDataModel? classDataModel;
-    
+  int hour = -1;
+  int minute = -1;
+  Timer? timer;  
   void initializeClassData() async{
     setState(() {
      
@@ -103,8 +113,26 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
             animationBehavior: AnimationBehavior.normal,
            );
     initializeClassData();
-   
-   
+   DateTime dateTime =DateTime.now();
+   setState(() {
+      hour = dateTime.hour;
+      minute = dateTime.minute;
+   });
+   timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      DateTime dateTime = DateTime.now();
+      
+        if(dateTime.minute != minute){
+             setState(() {
+                hour = dateTime.hour;
+                minute = dateTime.minute;   
+             });
+        }
+      
+      
+      // setState(() {
+      //   _currentTime = DateTime.now();
+      // });
+    });
      
     
     
@@ -120,71 +148,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     
     super.initState();
   }
-  
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-       backgroundColor: Colors.white,
-       bottomNavigationBar:  Container(
-       decoration: const BoxDecoration(
-          color: Colors.white,
-         boxShadow:[
-
-                     BoxShadow(
-                       color: Color.fromRGBO(0, 0, 0,0.15),
-                       offset: Offset(1, 1),
-                       blurRadius: 4               
-                     )
-                   ]
-        ), 
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Icon(Icons.settings_outlined),
-            Transform.translate(
-              offset:const Offset(0, -30),
-              child: Transform.rotate( 
-                angle: -math.pi / 4,
-                child: Container(
-                   width: 55,
-                   height:55,
-                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.withOpacity(0.15),
-                        spreadRadius: 5,
-                        blurRadius: 15,
-                        offset: const Offset(0,0),
-                   
-                      )
-                    ],
-                    gradient: const LinearGradient(
-                        begin: Alignment.bottomLeft,
-                        end: Alignment.topRight,
-                        colors: [
-                             Color.fromARGB(255, 12, 121, 211),
-                             Color.fromRGBO(2, 183, 255, 1),     
-                       ]
-                     )
-                   ),
-                   child: Transform.rotate(
-                    angle: math.pi / 4,
-                    child: const Icon(
-                      Icons.home,
-                      color: Colors.white,
-                    )
-                    ),
-                ),
-              ),
-            ),
-            const Icon(Icons.person_outline),
-           
-          ]
-        ),
-       ),
-       body: SafeArea(
+    return SafeArea(
         child:   Stack(
           children: [ 
             Positioned(
@@ -213,8 +184,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           ],
         )
         
-      ),
-    );
+      );
+   
   }
   
   Widget animateLoadData(){
@@ -331,11 +302,26 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                       ],
                     ),
                    
-                    Image.asset(
-                         "assets/image/user.png",
-                         width: 40,
-                         height: 40,
-                        ),
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      type:
+                                          PageTransitionType.fade,
+                                      child: const MessagePage(),
+                                      childCurrent: context.widget,
+                                      duration:
+                                          const Duration(milliseconds: 200),
+                                      reverseDuration:
+                                          const Duration(milliseconds: 200)));
+                      },
+                      child: Image.asset(
+                           "assets/image/user.png",
+                           width: 40,
+                           height: 40,
+                          ),
+                    ),
                   ],
                 ),
               ),
@@ -367,6 +353,9 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
               ), 
               const SizedBox(height: 25,),  
               if(!isLoading) TimeLineClass(
+                hour: hour,
+                minute: minute,
+             
                 modelClass: classDataModel,
                 building: classDataModel?.classGeoLocation.building![0]??Building(),
                ),
@@ -844,11 +833,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     ];
   }
   String formatDate(Jalali d) {
-  final f = d.formatter;
-
-  return '${f.wN} ${f.d} ${f.mN} ${f.yyyy}'.toPersianNumber();
+    final f = d.formatter;
+    return '${f.wN} ${f.d} ${f.mN} ${f.yyyy}'.toPersianNumber();
 }
-
-  
 
 }

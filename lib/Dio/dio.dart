@@ -2,13 +2,15 @@ import 'package:attendance/Dio/interceotor.dart';
 import 'package:dio/dio.dart';
 
 class AttendanceDio {
+  final int timeOut;
+  AttendanceDio({required this.timeOut});
   Dio getDio(){
    
     BaseOptions options = BaseOptions(
           baseUrl:"http://razdeveloper.ir/api/",
           receiveDataWhenStatusError: true,
-          connectTimeout: const Duration(seconds: 10), 
-          receiveTimeout: const Duration(seconds: 10)
+          connectTimeout:  Duration(seconds:timeOut ), 
+          receiveTimeout:  Duration(seconds:timeOut)
     );
     Dio dio = Dio(options);
     

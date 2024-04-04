@@ -14,19 +14,11 @@ class AttendanceInterceptor extends Interceptor{
    isConnected()
    .then((value){
    
-     if(value == 2){
+     if(value == 1){
       options.data = {
        "data": algorithm.encryptWithRAZalghorithm(jsonEncode(options.data))  
       };
       super.onRequest(options, handler);
-     }else if(value == 1){
-      handler.reject(
-        DioException(
-          requestOptions:RequestOptions(),
-          type: DioExceptionType.unknown,
-          message: "خطای VPN"
-        )
-      );
      }else{
        handler.reject(
         DioException(
@@ -46,10 +38,8 @@ class AttendanceInterceptor extends Interceptor{
      connectivityResult.contains(ConnectivityResult.wifi)    ||
      connectivityResult.contains(ConnectivityResult.ethernet)
   ) {
-    return 2; 
-  } else if (connectivityResult.contains(ConnectivityResult.vpn)) {
-    return 1;
-  } else  {
+    return 1; 
+  }  else  {
     return 0;
   } 
 

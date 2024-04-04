@@ -12,11 +12,16 @@ class ClassTimeLinePainter extends CustomPainter{
   double maxScroll=0;
   double widthofMobile;
   double currentTimeOffset=0;
+ final int hour ;
+ final int minute;
+ 
  final bool isToday;
   List<TimeLinePainterModel> widths=[];
   late Jalali nowjalali;
-  ClassTimeLinePainter(
+  ClassTimeLinePainter( 
     {super.repaint,
+    required this.hour,
+    required this.minute,
     required this.sortedClassData,
     required this.currentScroll,
     required this.widthofMobile,
@@ -29,7 +34,7 @@ class ClassTimeLinePainter extends CustomPainter{
   void paint(Canvas canvas, Size size) {
     
     if(sortedClassData.length>3){
-    Jalali nowjalali=Jalali(sortedClassData[2].end?.year??0,sortedClassData[2].end?.month??0,sortedClassData[2].end?.day??0,15,10);
+    Jalali nowjalali=Jalali(sortedClassData[2].end?.year??0,sortedClassData[2].end?.month??0,sortedClassData[2].end?.day??0,hour,minute);
    SortedClassData firstTimeLinePainterModel=sortedClassData.firstWhere((element) => element.widgetTypes==WidgetTypes.container);
     SortedClassData lastTimeLinePainterModel=sortedClassData.lastWhere((element) => element.widgetTypes==WidgetTypes.container);
    drawGrid(canvas);
@@ -163,6 +168,7 @@ class ClassTimeLinePainter extends CustomPainter{
                 fontSize: fontSize
               ),
             ),
+           
           ],
           
         ),

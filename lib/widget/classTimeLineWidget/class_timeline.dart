@@ -13,9 +13,12 @@ import 'package:attendance/widget/classTimeLineWidget/painters/class_arrow_paint
 class TimeLineClass extends StatefulWidget {
   final MainClassDataModel? modelClass;
   final Building building;
- // final VoidCallback onTap;
+  final int hour ;
+  final int minute ;
+  
 
-  const TimeLineClass({super.key, required this.modelClass, required this.building,});
+
+  const TimeLineClass({super.key, required this.modelClass, required this.building, required this.hour, required this.minute});
 
   @override
   State<TimeLineClass> createState() => _TimeLineClassState();
@@ -36,6 +39,8 @@ class _TimeLineClassState extends State<TimeLineClass> {
   double currentScroll = -1;
   bool notInit=false;
   int current=1;
+
+ 
   @override
   void initState() {
     
@@ -336,6 +341,8 @@ class _TimeLineClassState extends State<TimeLineClass> {
                   right: 0,
                   child: CustomPaint(
                     painter: ClassTimeLinePainter(
+                      hour: widget.hour, 
+                      minute: widget.minute,
                       sortedClassData: sortedClassData??[],
                       currentScroll: currentScroll,
                       widthofMobile: MediaQuery.of(context).size.width,
