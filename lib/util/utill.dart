@@ -52,7 +52,7 @@ class DeviceInformation{
        
          if (Platform.isAndroid) {
              androidInfo = await deviceInfo.androidInfo;
-             return "Android|${androidInfo.hardware}|${androidInfo.id}|${androidInfo.brand}|${androidInfo.model}|${androidInfo.host}";
+             return "Android|${androidInfo.hardware}|${androidInfo.id}|${androidInfo.brand}|${androidInfo.model}|${androidInfo.host}|${androidInfo.board}";
          } 
          else{
           return null;

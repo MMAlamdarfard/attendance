@@ -1,18 +1,16 @@
 import 'package:attendance/Dio/dio.dart';
-import 'package:attendance/model/auth_model/login_model/login_responce_model.dart';
 import 'package:attendance/util/exceptions/main_exception.dart/main_exception.dart';
-import 'package:attendance/util/utill.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-class LoginController{
+class GetStateLoginController{
    
 
   late AttendanceDio attendanceDio;
   late SharedPreferences prefs;
-  LoginController(){
+  GetStateLoginController(){
     attendanceDio = AttendanceDio(timeOut:5);
     init();
     
@@ -22,26 +20,14 @@ class LoginController{
   }
   
   
-  Future<Either<LoginResponceModel,MainException>> login(String state) async{
+  Future<Either<String,MainException>> getState() async{
     try{
-     
-     String? uniqueId = await DeviceInformation().getUniqueId();
     
-     if(uniqueId == null){
-       throw MainException(message: "ppppخطا در ارسال اطلاعات",statusCode: 100);
-       
-     }
-     var data ={
-       "state":state,
-       "uniqcode":uniqueId
-     };
-     Response<dynamic> response = await attendanceDio.getDio().post("login",data: data);
+     Response<dynamic> response = await attendanceDio.getDio().post("login/getState",);
      if(response.statusCode == 200 || response.statusCode ==201){
-      
-        LoginResponceModel loginResponceModel = LoginResponceModel.fromJson(response.data);
-        // prefs.setString('accessToken',loginResponceModel.accessToken??"");
-        // prefs.setString('refreshToken',loginResponceModel.refreshToken??"");
-        return Left(loginResponceModel);
+        String state = response.data['message'];
+        prefs.setString('state', state);
+        return Left(state);
      }
      else if(response.statusCode == 500 || response.statusCode == 501){
       throw ServerException(message: "خطای سرور لطفا بعدا تلاش کنید", statusCode: response.statusCode??500);

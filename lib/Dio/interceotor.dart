@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:attendance/util/alghoritm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -15,9 +14,9 @@ class AttendanceInterceptor extends Interceptor{
    .then((value){
    
      if(value == 1){
-      options.data = {
-       "data": algorithm.encryptWithRAZalghorithm(jsonEncode(options.data))  
-      };
+      // options.data = {
+      //  "data": algorithm.encryptWithRAZalghorithm(jsonEncode(options.data))  
+      // };
       super.onRequest(options, handler);
      }else{
        handler.reject(
