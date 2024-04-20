@@ -178,14 +178,16 @@ class _LoginPageState extends State<LoginPage> {
                   
                 ),
               ),
-              Text(auth),
+             
               const SizedBox(
                 height: 50,
               ),
               Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
+                  child:
+                  
+                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           maximumSize:
                               Size(MediaQuery.of(context).size.width - 60, 60),
@@ -237,6 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       )),
+               
                 ),
               ),
               const SizedBox(

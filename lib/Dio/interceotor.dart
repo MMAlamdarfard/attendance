@@ -30,7 +30,7 @@ class AttendanceInterceptor extends Interceptor{
    });
     
   }
- Future<int> isConnected() async {
+  Future<int> isConnected() async {
   final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
 
   if (connectivityResult.contains(ConnectivityResult.mobile) || 

@@ -28,7 +28,7 @@ class LoginController{
      String? uniqueId = await DeviceInformation().getUniqueId();
     
      if(uniqueId == null){
-       throw MainException(message: "ppppخطا در ارسال اطلاعات",statusCode: 100);
+       throw MainException(message: "خطا در ارسال اطلاعات",statusCode: 100);
        
      }
      var data ={
@@ -39,8 +39,8 @@ class LoginController{
      if(response.statusCode == 200 || response.statusCode ==201){
       
         LoginResponceModel loginResponceModel = LoginResponceModel.fromJson(response.data);
-        // prefs.setString('accessToken',loginResponceModel.accessToken??"");
-        // prefs.setString('refreshToken',loginResponceModel.refreshToken??"");
+        prefs.setString('accessToken',loginResponceModel.accessToken??"");
+        prefs.setString('refreshToken',loginResponceModel.refreshToken??"");
         return Left(loginResponceModel);
      }
      else if(response.statusCode == 500 || response.statusCode == 501){
@@ -75,7 +75,6 @@ class LoginController{
       }
     }
     else{
-      
       if(e.type ==DioExceptionType.unknown){
          return Right(ServerException(message:e.message??".خطای سرور لطفا شکیبا باشید" ,statusCode: 100));
       }else{
