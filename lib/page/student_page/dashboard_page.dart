@@ -5,7 +5,7 @@ import 'package:attendance/model/another_model/activity_model.dart';
 import 'package:attendance/model/another_model/classdata_model.dart';
 import 'package:attendance/model/another_model/geolocation.dart';
 import 'package:attendance/model/another_model/news_model.dart';
-import 'package:attendance/page/student_page/message_page.dart';
+import 'package:attendance/page/teacher_page/dashboard_page.dart';
 import 'package:attendance/util/custom_snackbar.dart';
 import 'package:attendance/util/utill.dart';
 import 'package:attendance/widget/circular_progressbarWidget/circular_progressbar.dart';
@@ -309,7 +309,8 @@ class _StudentDashboardState extends State<StudentDashboardPage> with SingleTick
                                   PageTransition(
                                       type:
                                           PageTransitionType.fade,
-                                      child: const MessagePage(),
+                                      child:const TeacherDashboardPage(), 
+                                     // const MessagePage(),
                                       childCurrent: context.widget,
                                       duration:
                                           const Duration(milliseconds: 200),
@@ -355,7 +356,7 @@ class _StudentDashboardState extends State<StudentDashboardPage> with SingleTick
               if(!isLoading) TimeLineClass(
                 hour: hour,
                 minute: minute,
-             
+                isStudent: true,
                 modelClass: classDataModel,
                 building: classDataModel?.classGeoLocation.building![0]??Building(),
                ),
@@ -416,11 +417,9 @@ class _StudentDashboardState extends State<StudentDashboardPage> with SingleTick
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                               Container(
-                                                               
-                                width: 10,
-                                                          
-                                 decoration: BoxDecoration(
+                               Container(                 
+                                width: 10,                          
+                                decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.only(
                                     topRight: Radius.circular(10),
                                     bottomRight: Radius.circular(10)

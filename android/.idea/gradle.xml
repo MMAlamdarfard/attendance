@@ -7,9 +7,9 @@
         <compositeConfiguration>
           <compositeBuild compositeDefinitionSource="SCRIPT">
             <builds>
-              <build path="$PROJECT_DIR$/../../../../../../../flutter/flutter/packages/flutter_tools/gradle" name="gradle">
+              <build path="$PROJECT_DIR$/../../../../../flutter/packages/flutter_tools/gradle" name="gradle">
                 <projects>
-                  <project path="$PROJECT_DIR$/../../../../../../../flutter/flutter/packages/flutter_tools/gradle" />
+                  <project path="$PROJECT_DIR$/../../../../../flutter/packages/flutter_tools/gradle" />
                 </projects>
               </build>
             </builds>
@@ -19,9 +19,18 @@
         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
         <option name="modules">
           <set>
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/connectivity_plus-6.0.1/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/device_info_plus-10.0.1/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/firebase_core-2.27.1/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/firebase_messaging-14.7.20/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/geolocator_android-4.5.4/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/network_info_plus-5.0.2/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/shared_preferences_android-2.2.1/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/uni_links-0.5.1/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/url_launcher_android-6.3.0/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/../../../../../../../flutter/flutter/packages/flutter_tools/gradle" />
+            <option value="$PROJECT_DIR$/../../../../../flutter/packages/flutter_tools/gradle" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

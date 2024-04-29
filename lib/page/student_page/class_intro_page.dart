@@ -297,63 +297,63 @@ class _HomePageState extends State<HomePage> {
                       height: 20,
                     ),
         
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: Text(
-                        "شرکت کنندگان:",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                    ),
+                    // const Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 15),
+                    //   child: Text(
+                    //     "شرکت کنندگان:",
+                    //     style: TextStyle(
+                    //         color: Colors.black,
+                    //         fontWeight: FontWeight.bold,
+                    //         fontSize: 20),
+                    //   ),
+                    // ),
         
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    // const SizedBox(
+                    //   height: 10,
+                    // ),
         
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: SizedBox(
-                          height: 130,
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 20,
-                              itemBuilder: (context, index) {
-                                return SizedBox(
-                                  width: 85,
-                                  child: IntrinsicHeight(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          'assets/svg/profile.png',
-                                          width:
-                                              75, // Adjust the width as needed
-                                          height:
-                                              75, // Adjust the height as needed
-                                        ),
-                                        const Expanded(
-                                          child: Text(
-                                            "محمد مهدی علمدارفرد",
-                                            maxLines: 5,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              })),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(right: 10),
+                    //   child: SizedBox(
+                    //       height: 130,
+                    //       child: ListView.builder(
+                    //           scrollDirection: Axis.horizontal,
+                    //           itemCount: 20,
+                    //           itemBuilder: (context, index) {
+                    //             return SizedBox(
+                    //               width: 85,
+                    //               child: IntrinsicHeight(
+                    //                 child: Column(
+                    //                   crossAxisAlignment:
+                    //                       CrossAxisAlignment.stretch,
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.center,
+                    //                   children: [
+                    //                     Image.asset(
+                    //                       'assets/svg/profile.png',
+                    //                       width:
+                    //                           75, // Adjust the width as needed
+                    //                       height:
+                    //                           75, // Adjust the height as needed
+                    //                     ),
+                    //                     const Expanded(
+                    //                       child: Text(
+                    //                         "محمد مهدی علمدارفرد",
+                    //                         maxLines: 5,
+                    //                         overflow: TextOverflow.ellipsis,
+                    //                         textAlign: TextAlign.center,
+                    //                         style: TextStyle(
+                    //                             fontSize: 12,
+                    //                             color: Colors.black,
+                    //                             fontWeight: FontWeight.w500),
+                    //                       ),
+                    //                     )
+                    //                   ],
+                    //                 ),
+                    //               ),
+                    //             );
+                    //           })),
+                    // ),
         
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),

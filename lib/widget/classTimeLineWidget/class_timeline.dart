@@ -3,6 +3,7 @@ import 'package:attendance/controller/classintro_controller.dart';
 import 'package:attendance/model/another_model/classdata_model.dart';
 import 'package:attendance/model/another_model/geolocation.dart';
 import 'package:attendance/page/student_page/class_intro_page.dart';
+import 'package:attendance/page/teacher_page/class_intro.dart';
 import 'package:attendance/widget/classTimeLineWidget/painters/class_timeline_painter.dart';
 
 import 'package:flutter/material.dart';
@@ -15,10 +16,16 @@ class TimeLineClass extends StatefulWidget {
   final Building building;
   final int hour ;
   final int minute ;
-  
+  final bool isStudent;
 
 
-  const TimeLineClass({super.key, required this.modelClass, required this.building, required this.hour, required this.minute});
+  const TimeLineClass({
+    super.key,
+    required this.modelClass,
+    required this.building,
+    required this.hour,
+    required this.minute,
+    required this.isStudent});
 
   @override
   State<TimeLineClass> createState() => _TimeLineClassState();
@@ -424,6 +431,8 @@ class _TimeLineClassState extends State<TimeLineClass> {
                                                         Radius.circular(20)))),
                                                onPressed:
                  (){
+                    if(widget.isStudent){
+
                      Navigator.of(context).push(
                             PageRouteBuilder(
                               pageBuilder: (context, animation, secondaryAnimation) {
@@ -441,6 +450,25 @@ class _TimeLineClassState extends State<TimeLineClass> {
 
                                  );
                     
+                    }
+                    else{
+                        Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) {
+                                                return const ClassIntroTeacher();
+                              },
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      return FadeTransition(
+                                      opacity: animation,
+                                      child: child
+                                  );
+                                },
+                                transitionDuration: const Duration(milliseconds: 100),
+                                reverseTransitionDuration: const Duration(milliseconds:100)
+                              ),
+
+                                 );
+                    }
                 },
                       
                                   child: Row(

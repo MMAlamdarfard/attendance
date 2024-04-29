@@ -1,13 +1,10 @@
 import 'dart:convert';
-
 import 'package:attendance/model/another_model/geolocation.dart';
 import 'package:attendance/util/custom_snackbar.dart';
 import 'package:attendance/util/utill.dart';
 import 'package:attendance/widget/classTimeLineWidget/class_timeline.dart';
 import 'package:attendance/widget/native_map/native_map.dart';
-
 import 'package:flutter/material.dart';
-//import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -796,7 +793,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     } else {
       if (await _platform.isLocationServiceEnabled()) {
         final connectivityResult = await (Connectivity().checkConnectivity());
-         if (connectivityResult == ConnectivityResult.wifi) {
+         if (connectivityResult.contains(ConnectivityResult.wifi)) {
            if(await checkWifi()){ 
            setState(() {
               wifiType = WifiType.wifiSet;
@@ -831,7 +828,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     }
   }
 
- 
   void wifiAuthorization() {
    if(wifiType == WifiType.noGPS) {
     customSnackBar.showErrorSnackBar(context, "لطفا موقعیت مکانی خود را فعال کنید");
